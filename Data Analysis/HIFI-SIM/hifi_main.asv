@@ -1,0 +1,405 @@
+clc; 
+clear;
+close all;
+
+addpath(genpath('./Main_fun'));
+
+%% =========================
+%  Mode Selection
+%  =========================
+mode_choice = menu('请选择处理模式', '单文件模式', '队列处理模式');
+
+if mode_choice == 0
+    error('用户取消操作。');
+end
+
+%% =========================
+%  Fixed System Parameters
+%  =========================
+system.wavelength  = 520;         % nm
+system.pixelsize   = 1.45 / 2.97; % um
+system.NA          = 0.13;
+system.nrDirs      = 3;
+system.nrPhases    = 3;
+system.phase_shift = 1;
+
+% 原始 9 帧排列方式：
+% 'dir_phase'  : D1P1 D1P2 D1P3 D2P1 D2P2 D2P3 D3P1 D3P2 D3P3
+% 'phase_dir'  : P1D1 P1D2 P1D3 P2D1 P2D2 P2D3 P3D1 P3D2 P3D3
+system.frame_order = 'dir_phase';
+
+%% =========================
+%  Parameter Combinations
+%  =========================
+backg_list        = [1.0,1.2];
+RL_list           = [0.9,1.0,1.2];
+attStrength_list  = [0.8];
+belta_list        = [1.0];
+attFWHM_list      = [0.8];
+Wiener_w1_list    = [1.0];
+Wiener_w2_list    = [1.0];
+
+%% =========================
+%  Direction Reorder List
+%  =========================
+% 方向重排说明：
+% [1 2 3] 表示不重排
+% [2 1 3] 表示原来的方向2作为新方向1，原方向1作为新方向2，原方向3不变
+% [3 2 1] 表示原方向3作为新方向1，原方向2不变，原方向1作为新方向3
+
+% 如果只想测试一种方向顺序，用这一行：
+% dir_order_list = {[1 2 3]};
+
+% 如果不确定方向顺序，建议先测试全部 6 种：
+dir_order_list = {
+    [1 2 3]
+};
+
+%% =========================
+%  Get Input Files
+%  =========================
+input_files = {};
+
+switch mode_choice
+    case 1
+        [file_name, file_path] = uigetfile({'*.tif;*.tiff', 'TIFF Files (*.tif, *.tiff)'}, ...
+            '请选择一个 TIFF 文件');
+        if isequal(file_name, 0)
+            error('未选择文件，程序终止。');
+        end
+        input_files{1} = fullfile(file_path, file_name);
+
+    case 2
+        folder_path = uigetdir(pwd, '请选择包含 TIFF 文件的文件夹');
+        if isequal(folder_path, 0)
+            error('未选择文件夹，程序终止。');
+        end
+
+        tif_list_1 = dir(fullfile(folder_path, '*.tif'));
+        tif_list_2 = dir(fullfile(folder_path, '*.tiff'));
+        tif_list = [tif_list_1; tif_list_2];
+
+        if isempty(tif_list)
+            error('所选文件夹中没有找到 .tif 或 .tiff 文件。');
+        end
+
+        for k = 1:numel(tif_list)
+            input_files{end+1} = fullfile(folder_path, tif_list(k).name); %#ok<AGROW>
+        end
+end
+
+fprintf('\n共找到 %d 个待处理文件。\n', numel(input_files));
+
+%% =========================
+%  Process Each File
+%  =========================
+for file_idx = 1:numel(input_files)
+
+    input_file = input_files{file_idx};
+    [input_parent, input_name, ~] = fileparts(input_file);
+    output_dir = fullfile(input_parent, [input_name, '_HIFI-SIM_results']);
+
+    if ~exist(output_dir, 'dir')
+        mkdir(output_dir);
+    end
+
+    fprintf('\n========================================\n');
+    fprintf('正在处理文件 %d / %d\n', file_idx, numel(input_files));
+    fprintf('输入文件: %s\n', input_file);
+    fprintf('输出目录: %s\n', output_dir);
+    fprintf('========================================\n');
+
+    process_single_stack(input_file, output_dir, input_name, system, ...
+        RL_list, backg_list, attStrength_list, belta_list, attFWHM_list, ...
+        Wiener_w1_list, Wiener_w2_list, dir_order_list);
+end
+
+fprintf('\n全部文件处理完成。\n');
+
+%% =========================
+%  Local Functions
+%  =========================
+function process_single_stack(input_file, output_dir, input_name, system, ...
+    RL_list, backg_list, attStrength_list, belta_list, attFWHM_list, ...
+    Wiener_w1_list, Wiener_w2_list, dir_order_list)
+
+fprintf('读取文件中...\n');
+rawdata = double(imreadstack(input_file));
+info = imfinfo(input_file);
+numFrames = numel(info);
+%% =========================
+%  Center Crop to Square
+%  =========================
+[raw_h, raw_w, raw_frames] = size(rawdata);
+
+if raw_h ~= raw_w
+    crop_size = min(raw_h, raw_w);
+    crop_size = floor(crop_size / 2) * 2;  % 保证为偶数尺寸
+
+    y_start = floor((raw_h - crop_size) / 2) + 1;
+    x_start = floor((raw_w - crop_size) / 2) + 1;
+
+    y_end = y_start + crop_size - 1;
+    x_end = x_start + crop_size - 1;
+
+    rawdata = rawdata(y_start:y_end, x_start:x_end, :);
+
+    fprintf('原始图像尺寸: %d x %d x %d\n', raw_h, raw_w, raw_frames);
+    fprintf('已中心裁切为正方形: %d x %d\n', crop_size, crop_size);
+    fprintf('裁切范围: y = %d:%d, x = %d:%d\n', y_start, y_end, x_start, x_end);
+end
+
+framesPerGroup = system.nrDirs * system.nrPhases;   % 3*3=9
+
+if mod(numFrames, framesPerGroup) ~= 0
+    warning('文件 %s 的总页数 %d 不能被 %d 整除，跳过该文件。', ...
+        input_file, numFrames, framesPerGroup);
+    return;
+end
+
+z = numFrames / framesPerGroup;
+[h, w, ~] = size(rawdata);
+
+fprintf('原始数据尺寸: %d x %d x %d\n', h, w, numFrames);
+fprintf('重建层数 z = %d\n', z);
+
+%% Test output size once
+tmp_data = reshape(rawdata(:, :, 1:framesPerGroup), [h, w, framesPerGroup]);
+
+% 使用第一种方向顺序测试输出尺寸
+tmp_dir_order = dir_order_list{1};
+tmp_data = reorder_sim_directions(tmp_data, system.nrDirs, system.nrPhases, ...
+    tmp_dir_order, system.frame_order);
+
+tmp_otf.attStrength = attStrength_list(1);
+tmp_otf.belta       = belta_list(1);
+tmp_otf.attFWHM     = attFWHM_list(1);
+
+tmp_Wiener.w1 = Wiener_w1_list(1);
+tmp_Wiener.w2 = Wiener_w2_list(1);
+
+tmp_out = HiFiSIM_stacks(tmp_data, system, RL_list(1), tmp_otf, tmp_Wiener);
+[oh, ow] = size(tmp_out);
+
+fprintf('输出尺寸: %d x %d\n', oh, ow);
+
+%% Batch Reconstruction
+task_id = 0;
+total_tasks = numel(RL_list) * numel(backg_list) * numel(attStrength_list) * ...
+              numel(belta_list) * numel(attFWHM_list) * ...
+              numel(Wiener_w1_list) * numel(Wiener_w2_list) * ...
+              numel(dir_order_list);
+
+for iDirOrder = 1:numel(dir_order_list)
+    dir_order = dir_order_list{iDirOrder};
+
+    validate_dir_order(dir_order, system.nrDirs);
+
+    for iRL = 1:numel(RL_list)
+        for iBg = 1:numel(backg_list)
+            for iAtt = 1:numel(attStrength_list)
+                for iBelta = 1:numel(belta_list)
+                    for iFWHM = 1:numel(attFWHM_list)
+                        for iW1 = 1:numel(Wiener_w1_list)
+                            for iW2 = 1:numel(Wiener_w2_list)
+
+                                task_id = task_id + 1;
+
+                                RLiteration = RL_list(iRL);
+                                backg = backg_list(iBg);
+
+                                otf_current.attStrength = attStrength_list(iAtt);
+                                otf_current.belta       = belta_list(iBelta);
+                                otf_current.attFWHM     = attFWHM_list(iFWHM);
+
+                                Wiener_current.w1 = Wiener_w1_list(iW1);
+                                Wiener_current.w2 = Wiener_w2_list(iW2);
+
+                                fprintf('\n==============================\n');
+                                fprintf('任务 %d / %d\n', task_id, total_tasks);
+                                fprintf('Direction order = [%d %d %d]\n', dir_order(1), dir_order(2), dir_order(3));
+                                fprintf('Frame order     = %s\n', system.frame_order);
+                                fprintf('RLiteration    = %.4f\n', RLiteration);
+                                fprintf('backg          = %.4f\n', backg);
+                                fprintf('attStrength    = %.4f\n', otf_current.attStrength);
+                                fprintf('belta          = %.4f\n', otf_current.belta);
+                                fprintf('attFWHM        = %.4f\n', otf_current.attFWHM);
+                                fprintf('Wiener.w1      = %.4f\n', Wiener_current.w1);
+                                fprintf('Wiener.w2      = %.4f\n', Wiener_current.w2);
+                                fprintf('==============================\n');
+
+                                SRdata = zeros(oh, ow, z);
+
+                                for j = 1:z
+                                    idx_start = (j-1) * framesPerGroup + 1;
+                                    idx_end   = j * framesPerGroup;
+
+                                    data = reshape(rawdata(:, :, idx_start:idx_end), [h, w, framesPerGroup]);
+
+                                    % 方向重排
+                                    data = reorder_sim_directions(data, system.nrDirs, system.nrPhases, ...
+                                        dir_order, system.frame_order);
+
+                                    if backg ~= 0
+                                        backgrounds = background_estimation(data ./ backg, 1, 5, 'db6', 10);
+                                        data = max(data - backgrounds, 0);
+                                    end
+
+                                    SRdata(:, :, j) = HiFiSIM_stacks(data, system, RLiteration, otf_current, Wiener_current);
+
+                                    fprintf('  已完成 %d / %d 层\n', j, z);
+                                end
+
+                                % normalize
+                                maxval = max(SRdata(:));
+                                if maxval > 0
+                                    SRdata = SRdata ./ maxval;
+                                end
+
+                                %% file name
+                                dir_str = sprintf('D%d%d%d', dir_order(1), dir_order(2), dir_order(3));
+
+                                base_name = sprintf('%s_%s_RL%.2f_BG%.2f_ATT%.2f_B%.2f_FWHM%.2f_W1%.2f_W2%.2f', ...
+                                    input_name, dir_str, RLiteration, backg, otf_current.attStrength, ...
+                                    otf_current.belta, otf_current.attFWHM, ...
+                                    Wiener_current.w1, Wiener_current.w2);
+
+                                base_name = strrep(base_name, '.', 'p');
+
+                                % save image
+                                save_path = fullfile(output_dir, base_name);
+                                fprintf('保存重建结果: %s\n', save_path);
+                                imWS(SRdata, save_path);
+
+                                % save txt log
+                                txt_path = fullfile(output_dir, [base_name, '.txt']);
+                                write_param_log(txt_path, input_file, output_dir, system, RLiteration, ...
+                                    otf_current, Wiener_current, backg, dir_order, h, w, numFrames, z, oh, ow);
+
+                                fprintf('保存参数记录: %s\n', txt_path);
+
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+fprintf('\n文件处理完成: %s\n', input_file);
+end
+
+%% =========================
+%  Direction Reorder Function
+%  =========================
+function data_out = reorder_sim_directions(data_in, nrDirs, nrPhases, dir_order, frame_order)
+
+validate_dir_order(dir_order, nrDirs);
+
+data_out = zeros(size(data_in), 'like', data_in);
+
+switch lower(frame_order)
+
+    case 'dir_phase'
+        % 原始顺序：
+        % D1P1 D1P2 D1P3 D2P1 D2P2 D2P3 D3P1 D3P2 D3P3
+        for newDir = 1:nrDirs
+            oldDir = dir_order(newDir);
+
+            old_idx = (oldDir - 1) * nrPhases + (1:nrPhases);
+            new_idx = (newDir - 1) * nrPhases + (1:nrPhases);
+
+            data_out(:, :, new_idx) = data_in(:, :, old_idx);
+        end
+
+    case 'phase_dir'
+        % 原始顺序：
+        % P1D1 P1D2 P1D3 P2D1 P2D2 P2D3 P3D1 P3D2 P3D3
+        for newDir = 1:nrDirs
+            oldDir = dir_order(newDir);
+
+            old_idx = oldDir:nrDirs:(nrDirs * nrPhases);
+            new_idx = newDir:nrDirs:(nrDirs * nrPhases);
+
+            data_out(:, :, new_idx) = data_in(:, :, old_idx);
+        end
+
+    otherwise
+        error('未知 frame_order: %s。请使用 dir_phase 或 phase_dir。', frame_order);
+end
+
+end
+
+%% =========================
+%  Validate Direction Order
+%  =========================
+function validate_dir_order(dir_order, nrDirs)
+
+if numel(dir_order) ~= nrDirs
+    error('dir_order 长度错误。当前 nrDirs = %d，但 dir_order 长度 = %d。', ...
+        nrDirs, numel(dir_order));
+end
+
+if ~isequal(sort(dir_order), 1:nrDirs)
+    error('dir_order 必须是 1:%d 的排列，例如 [1 2 3]、[2 1 3]、[3 2 1]。', nrDirs);
+end
+
+end
+
+%% =========================
+%  Write Log
+%  =========================
+function write_param_log(txt_path, input_file, output_dir, system, RLiteration, otf, Wiener, backg, dir_order, ...
+    h, w, numFrames, z, oh, ow)
+
+fid = fopen(txt_path, 'w');
+if fid == -1
+    warning('无法创建参数记录文件: %s', txt_path);
+    return;
+end
+
+fprintf(fid, 'HIFI-SIM Reconstruction Parameter Log\n');
+fprintf(fid, '=====================================\n\n');
+
+fprintf(fid, 'Input file: %s\n', input_file);
+fprintf(fid, 'Output dir: %s\n\n', output_dir);
+
+fprintf(fid, 'Input size:\n');
+fprintf(fid, '  raw height      = %d\n', h);
+fprintf(fid, '  raw width       = %d\n', w);
+fprintf(fid, '  raw frames      = %d\n', numFrames);
+fprintf(fid, '  z layers        = %d\n', z);
+fprintf(fid, '  output height   = %d\n', oh);
+fprintf(fid, '  output width    = %d\n\n', ow);
+
+fprintf(fid, 'System parameters:\n');
+fprintf(fid, '  wavelength      = %.6f\n', system.wavelength);
+fprintf(fid, '  pixelsize       = %.6f\n', system.pixelsize);
+fprintf(fid, '  NA              = %.6f\n', system.NA);
+fprintf(fid, '  nrDirs          = %d\n', system.nrDirs);
+fprintf(fid, '  nrPhases        = %d\n', system.nrPhases);
+fprintf(fid, '  phase_shift     = %.6f\n', system.phase_shift);
+fprintf(fid, '  frame_order     = %s\n\n', system.frame_order);
+
+fprintf(fid, 'Direction reorder:\n');
+fprintf(fid, '  dir_order       = [%s]\n\n', num2str(dir_order));
+
+fprintf(fid, 'Reconstruction parameters:\n');
+fprintf(fid, '  RLiteration     = %.6f\n', RLiteration);
+fprintf(fid, '  backg           = %.6f\n\n', backg);
+
+fprintf(fid, 'OTF parameters:\n');
+fprintf(fid, '  attStrength     = %.6f\n', otf.attStrength);
+fprintf(fid, '  belta           = %.6f\n', otf.belta);
+fprintf(fid, '  attFWHM         = %.6f\n\n', otf.attFWHM);
+
+fprintf(fid, 'Wiener parameters:\n');
+fprintf(fid, '  w1              = %.6f\n', Wiener.w1);
+fprintf(fid, '  w2              = %.6f\n\n', Wiener.w2);
+
+fprintf(fid, 'Generated time:\n');
+fprintf(fid, '  %s\n', datestr(now, 'yyyy-mm-dd HH:MM:SS'));
+
+fclose(fid);
+end

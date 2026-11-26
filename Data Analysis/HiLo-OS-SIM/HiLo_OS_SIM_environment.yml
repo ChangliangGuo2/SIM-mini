@@ -1,0 +1,33 @@
+name: hilo-os-sim
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - pip
+  - numpy=2.4.*
+  - opencv=4.13.*
+  - pywavelets=1.8.*
+  - pyside6=6.11.*
+  - matplotlib=3.10.*
+  - tifffile>=2026.3
+  - imagecodecs
+  - tk
+  - pip:
+      - bm3d==4.0.3
+
+# Create and run the CPU-compatible environment:
+#   conda env create -f HiLo_OS_SIM_environment.yml
+#   conda activate hilo-os-sim
+#   python HiLo_OS_SIM.py
+#
+# Optional NVIDIA GPU acceleration:
+# 1. Check the installed NVIDIA driver/CUDA compatibility.
+# 2. Install the matching CuPy wheel, for example for CUDA 12.x:
+#      python -m pip install cupy-cuda12x
+# 3. Enable the GPU path before starting the program in PowerShell:
+#      $env:SIM_USE_GPU = "1"
+#      python HiLo_OS_SIM.py
+# To force the CPU path:
+#      $env:SIM_USE_GPU = "0"

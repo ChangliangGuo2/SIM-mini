@@ -1,0 +1,149 @@
+{
+  "version": 2,
+  "patterns": [
+    {
+      "filename": "pattern_01_angle_000_phase_00_shift_0px.png",
+      "angle_deg": 0,
+      "phase_index": 0,
+      "shift_px": 0
+    },
+    {
+      "filename": "pattern_02_angle_000_phase_01_shift_1px.png",
+      "angle_deg": 0,
+      "phase_index": 1,
+      "shift_px": 1
+    },
+    {
+      "filename": "pattern_03_angle_000_phase_02_shift_2px.png",
+      "angle_deg": 0,
+      "phase_index": 2,
+      "shift_px": 2
+    },
+    {
+      "filename": "pattern_04_angle_000_phase_03_shift_3px.png",
+      "angle_deg": 0,
+      "phase_index": 3,
+      "shift_px": 3
+    },
+    {
+      "filename": "pattern_05_angle_000_phase_04_shift_4px.png",
+      "angle_deg": 0,
+      "phase_index": 4,
+      "shift_px": 4
+    },
+    {
+      "filename": "pattern_06_angle_000_phase_05_shift_5px.png",
+      "angle_deg": 0,
+      "phase_index": 5,
+      "shift_px": 5
+    },
+    {
+      "filename": "pattern_07_angle_000_phase_06_shift_6px.png",
+      "angle_deg": 0,
+      "phase_index": 6,
+      "shift_px": 6
+    },
+    {
+      "filename": "pattern_08_angle_000_phase_07_shift_7px.png",
+      "angle_deg": 0,
+      "phase_index": 7,
+      "shift_px": 7
+    },
+    {
+      "filename": "pattern_09_angle_000_phase_08_shift_8px.png",
+      "angle_deg": 0,
+      "phase_index": 8,
+      "shift_px": 8
+    },
+    {
+      "filename": "pattern_10_angle_000_phase_09_shift_9px.png",
+      "angle_deg": 0,
+      "phase_index": 9,
+      "shift_px": 9
+    },
+    {
+      "filename": "pattern_11_angle_000_phase_10_shift_10px.png",
+      "angle_deg": 0,
+      "phase_index": 10,
+      "shift_px": 10
+    },
+    {
+      "filename": "pattern_12_angle_000_phase_11_shift_11px.png",
+      "angle_deg": 0,
+      "phase_index": 11,
+      "shift_px": 11
+    },
+    {
+      "filename": "pattern_13_angle_090_phase_00_shift_0px.png",
+      "angle_deg": 90,
+      "phase_index": 0,
+      "shift_px": 0
+    },
+    {
+      "filename": "pattern_14_angle_090_phase_01_shift_1px.png",
+      "angle_deg": 90,
+      "phase_index": 1,
+      "shift_px": 1
+    },
+    {
+      "filename": "pattern_15_angle_090_phase_02_shift_2px.png",
+      "angle_deg": 90,
+      "phase_index": 2,
+      "shift_px": 2
+    },
+    {
+      "filename": "pattern_16_angle_090_phase_03_shift_3px.png",
+      "angle_deg": 90,
+      "phase_index": 3,
+      "shift_px": 3
+    },
+    {
+      "filename": "pattern_17_angle_090_phase_04_shift_4px.png",
+      "angle_deg": 90,
+      "phase_index": 4,
+      "shift_px": 4
+    },
+    {
+      "filename": "pattern_18_angle_090_phase_05_shift_5px.png",
+      "angle_deg": 90,
+      "phase_index": 5,
+      "shift_px": 5
+    },
+    {
+      "filename": "pattern_19_angle_090_phase_06_shift_6px.png",
+      "angle_deg": 90,
+      "phase_index": 6,
+      "shift_px": 6
+    },
+    {
+      "filename": "pattern_20_angle_090_phase_07_shift_7px.png",
+      "angle_deg": 90,
+      "phase_index": 7,
+      "shift_px": 7
+    },
+    {
+      "filename": "pattern_21_angle_090_phase_08_shift_8px.png",
+      "angle_deg": 90,
+      "phase_index": 8,
+      "shift_px": 8
+    },
+    {
+      "filename": "pattern_22_angle_090_phase_09_shift_9px.png",
+      "angle_deg": 90,
+      "phase_index": 9,
+      "shift_px": 9
+    },
+    {
+      "filename": "pattern_23_angle_090_phase_10_shift_10px.png",
+      "angle_deg": 90,
+      "phase_index": 10,
+      "shift_px": 10
+    },
+    {
+      "filename": "pattern_24_angle_090_phase_11_shift_11px.png",
+      "angle_deg": 90,
+      "phase_index": 11,
+      "shift_px": 11
+    }
+  ]
+}

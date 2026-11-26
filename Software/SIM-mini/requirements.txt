@@ -1,0 +1,10 @@
+# Linux/Jetson note:
+# Install native system packages first: ffmpeg, libturbojpeg, v4l-utils, Qt xcb
+# dependencies. For Jetson, prefer NVIDIA/JetPack OpenCV if you need CUDA.
+PySide6>=6.6
+opencv-python>=4.8
+PyTurboJPEG>=1.8.3,<2.0
+numpy>=1.24
+scipy>=1.10
+scikit-image>=0.21
+tifffile>=2023.7

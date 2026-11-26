@@ -1,0 +1,8 @@
+﻿metric,sim_over_widefield_ratio,improvement_percent,note
+SBR,6.745605315042657,574.5605315042657,SIM / Widefield; higher is better
+CNR,0.5277458538716311,-47.22541461283689,SIM / Widefield; higher is better
+Contrast,3.9388403431826142,293.8840343182614,SIM / Widefield; higher is better
+Edge gradient,2.029981216654355,102.99812166543552,SIM / Widefield; higher is better
+Laplacian var,16.24033387674146,1524.033387674146,SIM / Widefield; higher is better
+HF energy,11.62205401830075,1062.205401830075,SIM / Widefield; higher is better
+BG suppression,28.751374997371386,2775.1374997371386,BG suppression = Widefield BG mean / SIM BG mean; higher is better

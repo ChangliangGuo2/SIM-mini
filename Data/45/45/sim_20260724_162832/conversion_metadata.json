@@ -1,0 +1,56 @@
+{
+  "source_directory": "D:\\LaptopShare\\20250724\\MJPEG\\position2\\SIM\\45\\sim_20260724_162832",
+  "classification": "45",
+  "frame_count": 9,
+  "frame_names": [
+    "frame_01_angle_045_phase_00_shift_0px_seq_4592.jpg",
+    "frame_02_angle_045_phase_01_shift_2px_seq_4612.jpg",
+    "frame_03_angle_045_phase_02_shift_4px_seq_4632.jpg",
+    "frame_04_angle_165_phase_00_shift_0px_seq_4653.jpg",
+    "frame_05_angle_165_phase_01_shift_2px_seq_4673.jpg",
+    "frame_06_angle_165_phase_02_shift_4px_seq_4693.jpg",
+    "frame_07_angle_285_phase_00_shift_0px_seq_4714.jpg",
+    "frame_08_angle_285_phase_01_shift_2px_seq_4734.jpg",
+    "frame_09_angle_285_phase_02_shift_4px_seq_4755.jpg"
+  ],
+  "original_shape": [
+    2448,
+    3264,
+    3
+  ],
+  "widefield": {
+    "source_directory": "D:\\LaptopShare\\20250724\\MJPEG\\position2\\SIM\\45\\sim_20260724_162832\\raw_widefield",
+    "frame_count": 1,
+    "frame_names": [
+      "raw_widefield_seq_4572.jpg"
+    ],
+    "original_shape": [
+      2448,
+      3264,
+      3
+    ],
+    "color_order": "RGB"
+  },
+  "roi_4x3": {
+    "x": 608,
+    "y": 573,
+    "width": 1824,
+    "height": 1368
+  },
+  "roi_1x1": {
+    "x": 836,
+    "y": 573,
+    "width": 1368,
+    "height": 1368
+  },
+  "roi_1x1_alignment": "center",
+  "outputs": [
+    "camera_original_jpeg.tif",
+    "camera_original_jpeg_roi_4x3.tif",
+    "camera_original_jpeg_roi_1x1.tif",
+    "raw_widefield.tif",
+    "raw_widefield_roi_4x3.tif",
+    "raw_widefield_roi_1x1.tif"
+  ],
+  "color_order": "RGB"
+}

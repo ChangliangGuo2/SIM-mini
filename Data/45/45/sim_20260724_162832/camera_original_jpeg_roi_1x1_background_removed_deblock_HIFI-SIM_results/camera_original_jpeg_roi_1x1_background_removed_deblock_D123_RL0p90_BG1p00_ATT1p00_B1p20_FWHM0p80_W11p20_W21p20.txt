@@ -1,0 +1,41 @@
+HIFI-SIM Reconstruction Parameter Log
+=====================================
+
+Input file: D:\LaptopShare\20250724\MJPEG\position2\SIM\45\sim_20260724_162832\camera_original_jpeg_roi_1x1_background_removed_deblock.tif
+Output dir: D:\LaptopShare\20250724\MJPEG\position2\SIM\45\sim_20260724_162832\camera_original_jpeg_roi_1x1_background_removed_deblock_HIFI-SIM_results
+
+Input size:
+  raw height      = 1368
+  raw width       = 1368
+  raw frames      = 9
+  z layers        = 1
+  output height   = 2736
+  output width    = 2736
+
+System parameters:
+  wavelength      = 520.000000
+  pixelsize       = 0.539033
+  NA              = 0.130000
+  nrDirs          = 3
+  nrPhases        = 3
+  phase_shift     = 1.000000
+  frame_order     = dir_phase
+
+Direction reorder:
+  dir_order       = [1  2  3]
+
+Reconstruction parameters:
+  RLiteration     = 0.900000
+  backg           = 1.000000
+
+OTF parameters:
+  attStrength     = 1.000000
+  belta           = 1.200000
+  attFWHM         = 0.800000
+
+Wiener parameters:
+  w1              = 1.200000
+  w2              = 1.200000
+
+Generated time:
+  2026-08-24 13:41:26

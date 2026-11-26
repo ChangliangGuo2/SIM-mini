@@ -1,0 +1,170 @@
+{
+  "camera_driver": "FFmpeg DirectShow",
+  "camera_device_name": "XYKJ-8M",
+  "ffmpeg_exe": "C:\\Users\\LiBaowan\\miniforge3\\envs\\qtopencv\\Library\\bin\\ffmpeg.exe",
+  "camera_stream_format": "yuyv422",
+  "fps": 2,
+  "use_gpu_preview": false,
+  "acq_output_dir": "D:/Data/test/20260914/YUV422/SS1",
+  "acq_filename_prefix": "step_2um",
+  "acq_mode": "Sequence",
+  "acq_duration_s": 180,
+  "acq_frame_count": 10,
+  "acq_interval_ms": 12,
+  "acq_use_gpu": false,
+  "resolution": [
+    3264,
+    2448
+  ],
+  "test_mode": false,
+  "vessel_test_mode": false,
+  "neuron_test_mode": false,
+  "display_auto_contrast": false,
+  "display_black_level": 0,
+  "display_white_level": 138,
+  "display_enable_colormap": true,
+  "display_colormap": "plasma",
+  "vessel_test_image_path": "",
+  "neuron_test_image_path": "D:/Data/test/20250729/neuron/gray16_20260729_141613/acquisition_gray16_stack.tif",
+  "supported_camera_modes": [
+    {
+      "stream_format": "yuyv422",
+      "format": "yuyv422",
+      "width": 3264,
+      "height": 2448,
+      "fps": 2
+    },
+    {
+      "stream_format": "yuyv422",
+      "format": "yuyv422",
+      "width": 2592,
+      "height": 1944,
+      "fps": 2
+    },
+    {
+      "stream_format": "yuyv422",
+      "format": "yuyv422",
+      "width": 1920,
+      "height": 1080,
+      "fps": 5
+    },
+    {
+      "stream_format": "yuyv422",
+      "format": "yuyv422",
+      "width": 640,
+      "height": 480,
+      "fps": 30
+    },
+    {
+      "stream_format": "yuyv422",
+      "format": "yuyv422",
+      "width": 320,
+      "height": 240,
+      "fps": 30
+    },
+    {
+      "stream_format": "yuyv422",
+      "format": "yuyv422",
+      "width": 320,
+      "height": 180,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 3264,
+      "height": 2448,
+      "fps": 15
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 2592,
+      "height": 1944,
+      "fps": 15
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 1600,
+      "height": 1200,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 1280,
+      "height": 720,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 960,
+      "height": 540,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 848,
+      "height": 480,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 640,
+      "height": 480,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 640,
+      "height": 360,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 424,
+      "height": 240,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 320,
+      "height": 240,
+      "fps": 30
+    },
+    {
+      "stream_format": "mjpeg",
+      "format": "mjpeg",
+      "width": 320,
+      "height": 180,
+      "fps": 30
+    }
+  ],
+  "fixed_camera_controls_enabled": true,
+  "manual_exposure": 0.0,
+  "manual_gain": 0.0,
+  "directshow_device_index": 0,
+  "roi_enabled": true,
+  "roi_has_selection": true,
+  "roi_rect": [
+    590,
+    400,
+    1832,
+    1374
+  ],
+  "saved_at": "2026-09-14 14:52:52"
+}

@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "patterns": [
+    {
+      "filename": "pattern_01_angle_015_phase_00_shift_0px.png",
+      "angle_deg": 15,
+      "phase_index": 0,
+      "shift_px": 0
+    },
+    {
+      "filename": "pattern_02_angle_015_phase_01_shift_2px.png",
+      "angle_deg": 15,
+      "phase_index": 1,
+      "shift_px": 2
+    },
+    {
+      "filename": "pattern_03_angle_015_phase_02_shift_4px.png",
+      "angle_deg": 15,
+      "phase_index": 2,
+      "shift_px": 4
+    },
+    {
+      "filename": "pattern_04_angle_135_phase_00_shift_0px.png",
+      "angle_deg": 135,
+      "phase_index": 0,
+      "shift_px": 0
+    },
+    {
+      "filename": "pattern_05_angle_135_phase_01_shift_2px.png",
+      "angle_deg": 135,
+      "phase_index": 1,
+      "shift_px": 2
+    },
+    {
+      "filename": "pattern_06_angle_135_phase_02_shift_4px.png",
+      "angle_deg": 135,
+      "phase_index": 2,
+      "shift_px": 4
+    },
+    {
+      "filename": "pattern_07_angle_255_phase_00_shift_0px.png",
+      "angle_deg": 255,
+      "phase_index": 0,
+      "shift_px": 0
+    },
+    {
+      "filename": "pattern_08_angle_255_phase_01_shift_2px.png",
+      "angle_deg": 255,
+      "phase_index": 1,
+      "shift_px": 2
+    },
+    {
+      "filename": "pattern_09_angle_255_phase_02_shift_4px.png",
+      "angle_deg": 255,
+      "phase_index": 2,
+      "shift_px": 4
+    }
+  ]
+}
