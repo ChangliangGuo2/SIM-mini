@@ -10,4 +10,6 @@ SIM-mini is a miniature fluorescence microscope integrating programmable MicroLE
 
 ## Software
 
+The [SIM-mini User Manual](Software/SIM-mini_User_Manual.md) covers installation, camera and projection setup, acquisition modes, output files, and troubleshooting.
+
 ## Documentation
